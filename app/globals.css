@@ -1,81 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   De'VORA Global Design System
+   Tokens from: de_vora_visual_language/DESIGN.md
+   ──────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── CSS Custom Properties ──────────────────────────────────────────────────── */
+:root {
+  /* Surface / background */
+  --color-background:          #fff8f5;
+  --color-surface:             #fff8f5;
+  --color-surface-dim:         #e1d8d4;
+  --color-surface-low:         #fbf2ed;
+  --color-surface-container:   #f5ece7;
+  --color-surface-high:        #efe6e2;
+
+  /* Primary – mauve shell pink */
+  --color-primary:             #70585b;
+  --color-on-primary:          #ffffff;
+  --color-primary-container:   #fadadd;
+
+  /* Secondary – coastal gold */
+  --color-secondary:           #735c00;
+  --color-on-secondary:        #ffffff;
+  --color-secondary-container: #fed65b;
+  --color-secondary-fixed:     #ffe088;
+
+  /* Text */
+  --color-on-surface:          #1e1b18;
+  --color-on-surface-variant:  #4f4445;
+
+  /* Outlines */
+  --color-outline:             #807475;
+  --color-outline-variant:     #d2c3c4;
+
+  /* Decorative gold (metallic accent) */
+  --color-gold-accent:         #d4af37;
+  --color-gold-glow:           rgba(212, 175, 55, 0.10);
+
+  /* Spacing */
+  --container-max:  1280px;
+  --gutter:         24px;
+  --margin-mobile:  20px;
+  --margin-desktop: 60px;
+}
+
+/* ── Base Reset / Global ────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: #fdf6f0; /* cream */
-  color: #3a2a2a; /* ink */
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Animated coastal sunrise gradient for the hero */
+/* ── De'VORA Utility Classes ─────────────────────────────────────────────────── */
+
+/* Glass morphism – frosted sea-glass panels */
+.glass-morphism {
+  background: rgba(255, 248, 245, 0.70);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(210, 195, 196, 0.35);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.60);
+}
+
+/* Glass header variant – slightly more opaque */
+.glass-header {
+  background: rgba(255, 248, 245, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(210, 195, 196, 0.30);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
+}
+
+/* Lustre badge – gradient shell pink → gold for "Limited" / "New" tags */
+.lustre-badge {
+  background: linear-gradient(135deg, #fadadd 0%, #ffe088 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.20);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+  animation: lustreGlow 3s ease-in-out infinite;
+}
+
+/* Gold text glow (for hero wordmark / accent copy) */
+.text-glow {
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.35),
+               0 0 40px rgba(212, 175, 55, 0.15);
+}
+
+/* Hover lift – product cards */
+.hover-lift {
+  transition: transform 0.30s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.30s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 50px rgba(212, 175, 55, 0.14),
+              0 8px 20px rgba(112, 88, 91, 0.10);
+}
+
+/* Shimmer button – gold sweep on hover */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(212, 175, 55, 0.30) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  transition: background-position 0.55s ease;
+}
+.shimmer-btn:hover::after {
+  background-position: -200% 0;
+}
+
+/* Shimmer text – used on brand wordmark */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer-text {
+  background: linear-gradient(
+    100deg,
+    #1e1b18 0%,
+    #1e1b18 38%,
+    #d4af37 50%,
+    #1e1b18 62%,
+    #1e1b18 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ── Animated Backgrounds ─────────────────────────────────────────────────────  */
 .hero-gradient {
-  background: linear-gradient(135deg, #fdf6f0 0%, #f7c5d5 50%, #e8d5a3 100%);
+  background: linear-gradient(
+    135deg,
+    #fff8f5 0%,
+    #fadadd 45%,
+    #ffe088 100%
+  );
   background-size: 300% 300%;
   animation: heroShift 16s ease-in-out infinite;
 }
 
 @keyframes heroShift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
 }
 
-/* Floating sparkle particles */
+/* ── Floating Particles ─────────────────────────────────────────────────────── */
 .particle {
   position: absolute;
   bottom: -20px;
   border-radius: 9999px;
-  background: #fffaf7;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  background: #fff8f5;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.25);
   opacity: 0;
   animation: drift linear infinite;
   pointer-events: none;
 }
 
 @keyframes drift {
-  0% {
-    transform: translateY(0) scale(0.6);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.8;
-  }
-  90% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translateY(-105vh) scale(1.1);
-    opacity: 0;
-  }
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-105vh) scale(1.1); opacity: 0; }
 }
+
+/* ── Marquee ─────────────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee   { animation: marquee 26s linear infinite; }
+.marquee-pause:hover .animate-marquee { animation-play-state: paused; }
+
+/* ── Float / Bob ─────────────────────────────────────────────────────────────── */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+.animate-floaty { animation: floaty 5s ease-in-out infinite; }
 
 @keyframes bob {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 10px);
-  }
+  0%, 100% { transform: translate(-50%, 0); }
+  50%       { transform: translate(-50%, 10px); }
 }
-.animate-bob {
-  animation: bob 2.4s ease-in-out infinite;
+.animate-bob { animation: bob 2.4s ease-in-out infinite; }
+
+/* ── Lustre Glow ─────────────────────────────────────────────────────────────── */
+@keyframes lustreGlow {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
 }
 
+/* ── Slide Up ─────────────────────────────────────────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.4s ease forwards; }
+
+/* ── Pill CTA Buttons ─────────────────────────────────────────────────────────── */
+/* Base pill button — apply to <button> or <Link> */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 9999px;
+  font-family: var(--font-dmsans), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+.btn-pill:hover { transform: translateY(-2px); }
+.btn-pill:active { transform: translateY(0); }
+
+/* Primary pill – mauve */
+.btn-pill-primary {
+  background-color: #70585b;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(112, 88, 91, 0.25);
+}
+.btn-pill-primary:hover { background-color: #5e4a4d; }
+
+/* Secondary pill – gold */
+.btn-pill-secondary {
+  background-color: #735c00;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(115, 92, 0, 0.20);
+}
+.btn-pill-secondary:hover { background-color: #5e4b00; }
+
+/* ── Product Card aspect ─────────────────────────────────────────────────────── */
+.card-product-image {
+  aspect-ratio: 4 / 5;
+}
+
+/* ── Newsletter rounded input ─────────────────────────────────────────────────── */
+.newsletter-input {
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-outline-variant);
+  padding: 0 20px;
+  height: 48px;
+  background: rgba(255, 248, 245, 0.80);
+  color: var(--color-on-surface);
+  font-family: var(--font-dmsans), system-ui, sans-serif;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.newsletter-input:focus {
+  border-color: var(--color-gold-accent);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

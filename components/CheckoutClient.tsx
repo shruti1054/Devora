@@ -47,12 +47,12 @@ export default function CheckoutClient() {
     return (
       <Wrapper>
         <div className="text-center py-10">
-          <p className="font-serif italic text-2xl text-muted mb-6">
+          <p className="font-serif italic text-2xl text-on-surface-variant mb-6">
             Your bag is empty.
           </p>
           <Link
             href="/shop"
-            className="inline-block rounded-xl px-8 py-3.5 bg-blush text-ink font-medium shadow-soft hover:bg-rose hover:text-shell transition-colors"
+            className="btn-pill btn-pill-primary shimmer-btn"
           >
             Browse the collections
           </Link>
@@ -65,22 +65,22 @@ export default function CheckoutClient() {
   if (!user && !placed) {
     return (
       <Wrapper>
-        <div className="bg-shell rounded-card p-12 shadow-soft text-center max-w-md mx-auto">
-          <h3 className="font-serif font-light text-3xl mb-2">
+        <div className="glass-morphism rounded-card p-12 shadow-soft text-center max-w-md mx-auto">
+          <h3 className="font-serif font-medium text-3xl text-on-surface mb-2">
             Sign in to continue
           </h3>
-          <p className="text-muted mb-7">
+          <p className="text-on-surface-variant mb-7">
             Browse freely — we only ask you to sign in when you&apos;re ready to
             check out.
           </p>
           <button
             onClick={() => signIn().catch(() => showToast("Sign-in failed."))}
-            className="inline-flex items-center gap-3 bg-shell border border-muted/35 rounded-xl px-6 py-3.5 font-medium hover:shadow-soft hover:scale-[1.02] transition-all"
+            className="inline-flex items-center gap-3 bg-surface border border-outline-variant rounded-pill px-6 py-3.5 font-sans text-xs tracking-wider uppercase font-semibold hover:shadow-lift hover:scale-[1.02] transition-all"
           >
             <GoogleIcon /> Continue with Google
           </button>
           {isDemo && (
-            <p className="text-xs text-muted mt-4">
+            <p className="text-xs text-on-surface-variant mt-4">
               Demo mode — one click signs you in. Add Firebase keys for real
               Google login.
             </p>
@@ -94,34 +94,34 @@ export default function CheckoutClient() {
   if (placed) {
     return (
       <Wrapper>
-        <div className="bg-shell rounded-card p-8 md:p-12 shadow-soft max-w-xl mx-auto text-center">
+        <div className="glass-morphism rounded-card p-8 md:p-12 shadow-soft max-w-xl mx-auto text-center">
           <div className="text-5xl mb-3">🐚</div>
-          <h3 className="font-serif font-light text-3xl mb-1">
+          <h3 className="font-serif font-medium text-3xl text-on-surface mb-1">
             Order {placed.order.orderId} placed
           </h3>
-          <p className="text-muted mb-7">
+          <p className="text-on-surface-variant mb-7">
             Complete payment to confirm. We&apos;ll ship once payment is
             received.
           </p>
 
-          <div className="bg-cream rounded-card p-6 inline-block mb-6">
+          <div className="bg-surface-low rounded-card p-6 inline-block mb-6 border border-outline-variant/30 shadow-soft">
             <QRCodeSVG
               value={placed.upiLink}
               size={180}
-              bgColor="#FDF6F0"
-              fgColor="#3A2A2A"
+              bgColor="#fff8f5"
+              fgColor="#1e1b18"
             />
-            <p className="text-xs text-muted mt-3">Scan with any UPI app</p>
+            <p className="text-xs text-on-surface-variant mt-3">Scan with any UPI app</p>
           </div>
 
-          <div className="text-lg font-semibold mb-6">
+          <div className="text-lg font-semibold text-on-surface mb-6">
             Pay {fmtINR(placed.order.total)}
           </div>
 
           <div className="flex flex-col gap-3">
             <a
               href={placed.upiLink}
-              className="rounded-xl py-3.5 font-medium bg-gold text-shell shadow-soft hover:bg-[#b8973f] transition-colors"
+              className="btn-pill btn-pill-secondary shimmer-btn w-full text-center"
             >
               Pay in UPI App
             </a>
@@ -129,24 +129,24 @@ export default function CheckoutClient() {
               href={placed.waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-xl py-3.5 font-medium bg-[#25D366] text-white shadow-soft hover:brightness-95 transition-all"
+              className="w-full flex items-center justify-center h-12 rounded-pill font-sans text-xs tracking-wider uppercase font-semibold bg-[#25D366] text-white shadow-soft hover:brightness-95 transition-all"
             >
               Send order details on WhatsApp
             </a>
           </div>
 
-          <div className="mt-6 bg-cream rounded-xl px-4 py-3">
-            <p className="text-xs text-muted">
+          <div className="mt-6 bg-surface-low rounded-card px-4 py-3 border border-outline-variant/30">
+            <p className="text-xs text-on-surface-variant">
               Can&apos;t open a UPI app? Pay manually to:
             </p>
             <div className="flex items-center justify-center gap-2 mt-1">
-              <span className="font-semibold">{UPI_ID}</span>
+              <span className="font-semibold text-on-surface">{UPI_ID}</span>
               <button
                 onClick={() => {
                   navigator.clipboard?.writeText(UPI_ID);
                   showToast("UPI ID copied ✦");
                 }}
-                className="rounded-pill bg-blush px-3 py-1 text-xs hover:bg-rose hover:text-shell transition-colors"
+                className="rounded-pill bg-primary-container px-3 py-1 text-xs text-on-surface font-medium hover:bg-primary hover:text-on-primary transition-colors"
               >
                 Copy
               </button>
@@ -155,7 +155,7 @@ export default function CheckoutClient() {
 
           <Link
             href="/shop"
-            className="inline-block mt-7 text-sm underline text-muted hover:text-rose"
+            className="inline-block mt-7 text-sm underline text-on-surface-variant hover:text-primary transition-colors"
           >
             Continue shopping
           </Link>
@@ -215,9 +215,10 @@ export default function CheckoutClient() {
       `Name: ${name}\nPhone: ${phone}\n` +
       `Address: ${street}, ${city}, ${state} - ${pincode}\n\n` +
       `Paid via UPI to ${UPI_ID}`;
-    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-      message
-    )}`;
+    const waLink =
+      `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}` +
+      `&text=${encodeURIComponent(message)}` +
+      `&type=phone_number&app_absent=0`;
 
     clear();
     setPlaced({ order, upiLink, waLink });
@@ -230,13 +231,13 @@ export default function CheckoutClient() {
     type = "text"
   ) => (
     <div>
-      <label className="block text-sm text-muted mb-1.5">{label}</label>
+      <label className="block font-sans text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-on-surface-variant mb-1.5">{label}</label>
       <input
         type={type}
         value={form[key]}
         onChange={set(key)}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-rose/45 bg-cream px-4 py-3 text-sm focus:outline-none focus:border-rose focus:ring-2 focus:ring-rose/20 transition"
+        className="w-full rounded-xl border border-outline-variant bg-surface px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/15 transition"
       />
     </div>
   );
@@ -244,8 +245,8 @@ export default function CheckoutClient() {
   return (
     <Wrapper>
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 items-start">
-        <div className="bg-shell rounded-card p-8 shadow-soft">
-          <h3 className="font-serif font-light text-2xl mb-6">
+        <div className="glass-morphism rounded-card p-8 shadow-soft">
+          <h3 className="font-serif font-medium text-2xl text-on-surface mb-6">
             Delivery details
           </h3>
           <div className="space-y-4">
@@ -260,31 +261,31 @@ export default function CheckoutClient() {
           </div>
         </div>
 
-        <div className="bg-shell rounded-card p-8 shadow-soft lg:sticky lg:top-28">
-          <h3 className="font-serif font-light text-2xl mb-5">Order Summary</h3>
+        <div className="glass-morphism rounded-card p-8 shadow-soft lg:sticky lg:top-28">
+          <h3 className="font-serif font-medium text-2xl text-on-surface mb-5">Order Summary</h3>
           {lines.map((l) => (
             <div
               key={l.id + (l.variant ?? "")}
-              className="flex justify-between text-sm py-2"
+              className="flex justify-between text-sm py-2 text-on-surface-variant"
             >
               <span>
                 {l.name}
                 {l.variant ? ` (${l.variant})` : ""} × {l.qty}
               </span>
-              <span>{fmtINR(l.price * l.qty)}</span>
+              <span className="text-on-surface font-medium">{fmtINR(l.price * l.qty)}</span>
             </div>
           ))}
-          <div className="flex justify-between pt-4 mt-2 border-t border-rose/30 text-lg font-semibold">
+          <div className="flex justify-between pt-4 mt-2 border-t border-outline-variant/40 text-lg font-semibold text-on-surface">
             <span>Total</span>
             <span>{fmtINR(subtotal)}</span>
           </div>
           <button
             onClick={placeOrder}
-            className="w-full mt-6 rounded-xl py-3.5 font-medium bg-gold text-shell shadow-soft hover:bg-[#b8973f] transition-colors"
+            className="btn-pill btn-pill-secondary shimmer-btn w-full mt-6"
           >
             Place Order via UPI
           </button>
-          <p className="text-xs text-muted text-center mt-3">
+          <p className="text-xs text-on-surface-variant text-center mt-3">
             Pay by UPI &amp; we get your order on WhatsApp instantly.
           </p>
         </div>
@@ -295,11 +296,11 @@ export default function CheckoutClient() {
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
-    <section className="max-w-[1280px] mx-auto px-6 pt-28 pb-16 min-h-screen">
-      <span className="block text-center font-serif italic text-rose tracking-[0.18em] mb-2">
+    <section className="max-w-container mx-auto px-6 pt-28 pb-16 min-h-screen">
+      <span className="block text-center font-sans text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-primary mb-2">
         almost yours
       </span>
-      <h2 className="text-center font-serif font-light text-[clamp(2.4rem,5vw,3.6rem)] tracking-wide mb-10">
+      <h2 className="text-center font-serif font-medium text-[clamp(2.4rem,5vw,3.6rem)] tracking-wide text-on-surface mb-10">
         Checkout
       </h2>
       {children}
