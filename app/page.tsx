@@ -1,5 +1,4 @@
 import Hero from "@/components/Hero";
-import FeatureStrip from "@/components/FeatureStrip";
 import About from "@/components/About";
 import Collections from "@/components/Collections";
 import ArtisanalJourney from "@/components/ArtisanalJourney";
@@ -10,7 +9,6 @@ export default function HomePage() {
   return (
     <main className="pb-nav-mobile md:pb-0 overflow-x-hidden">
       <Hero />
-      <FeatureStrip />
       <About />
       
       {/* 4. The Golden Hour Collection banner */}
