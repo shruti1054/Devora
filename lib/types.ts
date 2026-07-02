@@ -10,6 +10,7 @@ export interface Product {
   description: string;
   variants: string[];     // e.g. ["S","M","L"] or [] if none
   icon: string;           // emoji shown on the gradient placeholder
+  image?: string;         // local path or URL to product photo
 }
 
 export interface CartItem {

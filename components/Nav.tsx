@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "./cart/CartContext";
 import { useUI } from "./ui/UIContext";
 import { useAuth } from "./auth/AuthContext";
-import { BRAND } from "@/lib/config";
+import { BRAND, CONTACT_MAILTO } from "@/lib/config";
 
 export default function Nav() {
   const { count } = useCart();
@@ -23,10 +23,22 @@ export default function Nav() {
   }, []);
 
   const links = [
+    { href: "/",                          label: "Boutique",       icon: "home" },
+    { href: "/shop",                      label: "All Jewellery",  icon: "grid_view" },
+    { href: "/shop?category=rings",       label: "Rings",          icon: "radio_button_unchecked" },
+    { href: "/shop?category=earrings",    label: "Earrings",       icon: "diamond" },
+    { href: "/shop?category=neckpieces",  label: "Neckpieces",     icon: "favorite" },
+    { href: "/shop?category=bangles",     label: "Bangles",        icon: "circle" },
+    { href: "/shop?category=armcuffs",    label: "Arm Cuffs",      icon: "auto_awesome" },
+    { href: "/#about",                    label: "About",          icon: "info" },
+    { href: CONTACT_MAILTO,               label: "Contact",        icon: "mail" },
+  ];
+
+  // Desktop top nav links (just the main pages, not every category)
+  const desktopLinks = [
     { href: "/",       label: "Boutique" },
     { href: "/shop",   label: "Collections" },
     { href: "/#about", label: "About" },
-    { href: "/#footer",label: "Contact" },
   ];
 
   const initial = (user?.displayName || "D").charAt(0).toUpperCase();
@@ -40,47 +52,62 @@ export default function Nav() {
             : "border-b border-transparent"
         }`}
       >
-        <div className="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full max-w-container-max mx-auto">
-          
-          {/* Mobile hamburger menu (hidden on desktop for a cleaner desktop navbar) */}
-          <button 
-            onClick={() => setMenuOpen((v) => !v)}
-            className="md:hidden active:scale-95 transition-transform duration-200 text-primary p-1 flex items-center justify-center"
-            aria-label="Menu"
-          >
-            <span className="material-symbols-outlined select-none text-2xl" style={{ fontVariationSettings: "'FILL' 0" }}>
-              menu
-            </span>
-          </button>
+        <div className="relative flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full max-w-container-max mx-auto">
 
-          {/* Desktop Direct Links (visible only on desktop md+) */}
-          <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="font-sans text-xs font-semibold tracking-widest uppercase text-on-surface-variant hover:text-primary transition-colors duration-200 relative group"
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-secondary transition-all duration-300 group-hover:w-full" />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {/* LEFT: menu + desktop logo & links */}
+          <div className="flex items-center gap-3 z-10">
+            {/* Logo — tapping opens menu on mobile, navigates home on desktop */}
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              className="md:hidden touch-target flex items-center justify-center active:scale-95 transition-transform duration-200 cursor-pointer shrink-0 p-1 bg-transparent border-none rounded-full"
+              aria-label="Menu"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo_clean.jpg"
+                alt={BRAND.name}
+                className="h-9 w-9 object-cover rounded-full border border-primary/20 shadow-sm"
+              />
+            </button>
 
-          {/* Logo brand wordmark */}
+            {/* Desktop: logo as home link */}
+            <Link href="/" className="hidden md:flex items-center cursor-pointer shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo_clean.jpg"
+                alt={BRAND.name}
+                className="h-10 w-10 object-cover rounded-full border border-primary/20 shadow-sm"
+              />
+            </Link>
+
+            {/* Desktop nav links */}
+            <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0 ml-2">
+              {desktopLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="font-sans text-xs font-semibold tracking-widest uppercase text-on-surface-variant hover:text-primary transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Brand — centered on all screen sizes */}
           <Link
             href="/"
-            className="font-serif text-2xl md:text-headline-md text-primary uppercase tracking-widest leading-none cursor-pointer"
+            className="absolute left-1/2 -translate-x-1/2 font-serif text-lg md:text-2xl text-primary uppercase tracking-[0.12em] md:tracking-widest leading-none cursor-pointer z-10"
           >
             {BRAND.name}
           </Link>
 
-          {/* Right Action Icons */}
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/shop" 
-              className="flex items-center text-on-surface-variant hover:text-primary transition-colors duration-300"
+          {/* RIGHT: search, cart, user */}
+          <div className="flex items-center gap-2 sm:gap-4 z-10">
+            <Link
+              href="/shop"
+              className="touch-target flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors duration-300"
               aria-label="Search"
             >
               <span className="material-symbols-outlined text-2xl select-none" style={{ fontVariationSettings: "'FILL' 0" }}>
@@ -91,7 +118,7 @@ export default function Nav() {
             {/* Cart Trigger */}
             <button
               onClick={openCart}
-              className="relative text-primary hover:scale-110 transition-transform p-1 flex items-center justify-center active:scale-95 duration-200"
+              className="relative touch-target flex items-center justify-center text-primary hover:scale-110 transition-transform active:scale-95 duration-200"
               aria-label="Open cart"
             >
               <span className="material-symbols-outlined text-2xl select-none" style={{ fontVariationSettings: "'FILL' 0" }}>
@@ -109,7 +136,7 @@ export default function Nav() {
               <div className="relative">
                 <button
                   onClick={() => setAvatarOpen((v) => !v)}
-                  className="w-7 h-7 rounded-full border border-primary-container overflow-hidden grid place-items-center bg-primary-container text-on-surface font-serif text-[11px]"
+                  className="touch-target w-9 h-9 rounded-full border border-primary-container overflow-hidden grid place-items-center bg-primary-container text-on-surface font-serif text-[11px]"
                   aria-label="Account"
                 >
                   {user.photoURL ? (
@@ -156,24 +183,25 @@ export default function Nav() {
         >
           <div className="flex justify-between items-center mb-12">
             <span className="font-serif text-2xl text-primary uppercase tracking-widest">Collections</span>
-            <button 
-              className="text-primary active:scale-90 transition-transform" 
+            <button
+              className="touch-target flex items-center justify-center text-primary active:scale-90 transition-transform rounded-full"
               onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
             >
-              <span className="material-symbols-outlined">close</span>
+              <span className="material-symbols-outlined text-2xl">close</span>
             </button>
           </div>
           
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 text-primary font-serif text-lg group hover:translate-x-2 transition-transform duration-200"
+                className="flex items-center gap-4 text-on-surface font-sans text-sm font-medium tracking-wide group hover:translate-x-2 hover:text-primary transition-all duration-200 py-3 px-3 rounded-xl hover:bg-primary-container/40 min-h-[44px]"
               >
-                <span className="material-symbols-outlined text-secondary text-xl">
-                  auto_awesome
+                <span className="material-symbols-outlined text-secondary text-[1.1rem] shrink-0" style={{ fontVariationSettings: "'FILL' 0" }}>
+                  {link.icon}
                 </span>
                 {link.label}
               </Link>

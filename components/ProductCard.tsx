@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const isGold = product.collection === "gold";
 
   // Match corresponding high-end beach thumbnail or fallback to brand gradient
-  const bgImg = PRODUCT_IMAGES[product.name];
+  const bgImg = product.image || PRODUCT_IMAGES[product.name];
 
   return (
     <div 
@@ -46,7 +46,7 @@ export default function ProductCard({ product }: { product: Product }) {
           >
             {/* Soft highlight overlay */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.55),transparent_55%)]" />
-            <div className="absolute w-[62%] aspect-square rounded-full border border-white/35" />
+            <div className="absolute w-[70%] h-[75%] rounded-xl border border-white/30" />
             <span className="relative z-10">{product.icon}</span>
           </div>
         )}
@@ -57,24 +57,24 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         )}
 
-        {/* Quick Add Overlay on hover */}
-        <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button 
+        {/* Quick Add — always visible on touch devices */}
+        <div className="quick-add-overlay absolute inset-x-0 bottom-0 p-3 sm:p-4 bg-gradient-to-t from-black/50 via-black/20 to-transparent transition-opacity duration-300">
+          <button
             onClick={(e) => {
               e.stopPropagation();
               add(product, product.variants[0] ?? null);
               showToast(`Added ${product.name} to bag 🐚`);
               openCart();
             }}
-            className="w-full py-3 bg-inverse-surface text-inverse-on-surface text-xs font-semibold tracking-widest uppercase rounded-md shadow-md hover:bg-primary active:scale-95 transition-all shimmer-btn"
+            className="w-full min-h-[44px] py-2.5 sm:py-3 bg-inverse-surface text-inverse-on-surface text-[10px] sm:text-xs font-semibold tracking-widest uppercase rounded-md shadow-md hover:bg-primary active:scale-95 transition-all shimmer-btn"
           >
             Quick Add
           </button>
         </div>
       </div>
 
-      <div className="text-center space-y-2 px-4">
-        <h3 className="font-serif text-body-lg text-on-surface group-hover:text-primary transition-colors duration-200">
+      <div className="text-center space-y-1 sm:space-y-2 px-1 sm:px-4">
+        <h3 className="font-serif text-sm sm:text-body-lg text-on-surface group-hover:text-primary transition-colors duration-200 line-clamp-2 leading-snug">
           {product.name}
         </h3>
         <p className="font-sans text-label-sm text-secondary tracking-widest font-semibold">

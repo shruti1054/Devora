@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCart } from "./cart/CartContext";
 import { useUI } from "./ui/UIContext";
 import { fmtINR } from "@/lib/format";
+import { DELIVERY_FEE, FREE_DELIVERY_ABOVE } from "@/lib/config";
 
 /**
  * De'VORA Cart Drawer
@@ -37,7 +38,7 @@ export default function CartDrawer() {
           <h3 className="font-serif text-2xl text-on-surface">Your Bag</h3>
           <button
             onClick={closeCart}
-            className="w-8 h-8 rounded-pill grid place-items-center text-xl text-on-surface-variant hover:bg-primary-container hover:text-on-surface transition-all"
+            className="touch-target w-10 h-10 rounded-pill grid place-items-center text-2xl text-on-surface-variant hover:bg-primary-container hover:text-on-surface transition-all active:scale-95"
             aria-label="Close cart"
           >
             ×
@@ -57,15 +58,22 @@ export default function CartDrawer() {
                 className="flex gap-4 py-4 border-b border-outline-variant/30"
               >
                 {/* Thumbnail */}
-                <div
-                  className={`w-[70px] h-[70px] rounded-card shrink-0 grid place-items-center text-2xl ${
-                    l.collection === "gold"
-                      ? "bg-gradient-to-br from-secondary-fixed to-[#f7eed6]"
-                      : "bg-gradient-to-br from-primary-container to-[#fbe3ec]"
-                  }`}
-                >
-                  {l.icon}
-                </div>
+                {l.image ? (
+                  <div
+                    className="w-[70px] h-[70px] rounded-card shrink-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url('${l.image}')` }}
+                  />
+                ) : (
+                  <div
+                    className={`w-[70px] h-[70px] rounded-card shrink-0 grid place-items-center text-2xl ${
+                      l.collection === "gold"
+                        ? "bg-gradient-to-br from-secondary-fixed to-[#f7eed6]"
+                        : "bg-gradient-to-br from-primary-container to-[#fbe3ec]"
+                    }`}
+                  >
+                    {l.icon}
+                  </div>
+                )}
 
                 {/* Info */}
                 <div className="flex-1">
@@ -103,9 +111,21 @@ export default function CartDrawer() {
 
         {/* Footer */}
         <div className="px-7 py-6 border-t border-outline-variant/30 bg-surface-low">
-          <div className="flex justify-between text-lg mb-4">
+          <div className="flex justify-between text-sm mb-2">
             <span className="text-on-surface-variant font-sans">Subtotal</span>
-            <strong className="font-semibold text-on-surface">{fmtINR(subtotal)}</strong>
+            <span className="text-on-surface">{fmtINR(subtotal)}</span>
+          </div>
+          <div className="flex justify-between text-sm mb-4">
+            <span className="text-on-surface-variant font-sans">Delivery</span>
+            <span className="text-on-surface">
+              {subtotal >= FREE_DELIVERY_ABOVE ? "Free" : fmtINR(DELIVERY_FEE)}
+            </span>
+          </div>
+          <div className="flex justify-between text-lg mb-4 border-t border-outline-variant/30 pt-4">
+            <span className="text-on-surface font-sans font-medium">Total</span>
+            <strong className="font-semibold text-on-surface">
+              {fmtINR(subtotal + (subtotal >= FREE_DELIVERY_ABOVE ? 0 : DELIVERY_FEE))}
+            </strong>
           </div>
           <Link
             href="/checkout"

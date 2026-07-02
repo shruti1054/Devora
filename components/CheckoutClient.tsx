@@ -7,8 +7,14 @@ import { useCart } from "./cart/CartContext";
 import { useAuth } from "./auth/AuthContext";
 import { useUI } from "./ui/UIContext";
 import { fmtINR } from "@/lib/format";
-import { UPI_ID, UPI_PAYEE_NAME, WHATSAPP_NUMBER } from "@/lib/config";
-import { createOrder } from "@/lib/store";
+import {
+  UPI_ID,
+  UPI_PAYEE_NAME,
+  WHATSAPP_NUMBER,
+  DELIVERY_FEE,
+  FREE_DELIVERY_ABOVE,
+} from "@/lib/config";
+import { createOrder, getNextOrderId } from "@/lib/store";
 import type { Order } from "@/lib/types";
 
 const GoogleIcon = () => (
@@ -171,7 +177,10 @@ export default function CheckoutClient() {
       showToast("Please complete your delivery details.");
       return;
     }
-    const orderId = "DV" + Date.now().toString().slice(-8);
+    const orderId = await getNextOrderId();
+    const delivery = subtotal >= FREE_DELIVERY_ABOVE ? 0 : DELIVERY_FEE;
+    const finalTotal = subtotal + delivery;
+
     const order: Order = {
       orderId,
       name,
@@ -184,7 +193,7 @@ export default function CheckoutClient() {
         qty: l.qty,
         price: l.price,
       })),
-      total: subtotal,
+      total: finalTotal,
       userEmail: user?.email ?? null,
       createdAt: Date.now(),
       status: "pending",
@@ -211,6 +220,7 @@ export default function CheckoutClient() {
       .join("\n");
     const message =
       `*New De'Vora order ${orderId}*\n\n${itemsText}\n\n` +
+      `Delivery: ${delivery === 0 ? "Free" : fmtINR(delivery)}\n` +
       `*Total: ${fmtINR(order.total)}*\n\n` +
       `Name: ${name}\nPhone: ${phone}\n` +
       `Address: ${street}, ${city}, ${state} - ${pincode}\n\n` +
@@ -275,9 +285,15 @@ export default function CheckoutClient() {
               <span className="text-on-surface font-medium">{fmtINR(l.price * l.qty)}</span>
             </div>
           ))}
+          <div className="flex justify-between text-sm py-2 text-on-surface-variant">
+            <span>Delivery</span>
+            <span className="text-on-surface font-medium">
+              {subtotal >= FREE_DELIVERY_ABOVE ? "Free" : fmtINR(DELIVERY_FEE)}
+            </span>
+          </div>
           <div className="flex justify-between pt-4 mt-2 border-t border-outline-variant/40 text-lg font-semibold text-on-surface">
             <span>Total</span>
-            <span>{fmtINR(subtotal)}</span>
+            <span>{fmtINR(subtotal + (subtotal >= FREE_DELIVERY_ABOVE ? 0 : DELIVERY_FEE))}</span>
           </div>
           <button
             onClick={placeOrder}

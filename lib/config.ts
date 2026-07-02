@@ -10,14 +10,32 @@ export const UPI_PAYEE_NAME = "DeVora";
 export const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917249044809";
 
-// Google account allowed to manage products at /admin.
-export const ADMIN_EMAIL =
-  (process.env.NEXT_PUBLIC_ADMIN_EMAIL || "").toLowerCase();
+// Google accounts allowed to manage products at /admin.
+// Multiple admins supported — comma-separated in env or hardcoded below.
+const envAdmins = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAIL || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+export const ADMIN_EMAILS: string[] =
+  envAdmins.length > 0
+    ? envAdmins
+    : ["shrutite22comp@student.mes.ac.in", "satyashivthare13@gmail.com"];
+
+// Legacy compat
+export const ADMIN_EMAIL = ADMIN_EMAILS[0];
+
+// Handling / delivery fee
+export const DELIVERY_FEE = 60;            // ₹60 flat
+export const FREE_DELIVERY_ABOVE = 499;    // free if subtotal >= this
 
 export const BRAND = {
   name: "De'Vora",
   tagline: "Wear the shore.",
 };
+
+export const CONTACT_EMAIL = "devoraaa45@gmail.com";
+export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   rings: "Rings",

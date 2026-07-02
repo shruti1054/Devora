@@ -121,6 +121,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     105deg,
     transparent 40%,
@@ -281,6 +282,41 @@ body {
 .newsletter-input:focus {
   border-color: var(--color-gold-accent);
   box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+/* ── Mobile safe-area & touch helpers ──────────────────────────────────────── */
+.pb-nav-mobile {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Quick-add overlay — always visible on touch, hover-only on desktop */
+@media (hover: hover) and (pointer: fine) {
+  .quick-add-overlay {
+    opacity: 0;
+  }
+  .group:hover .quick-add-overlay,
+  .group:focus-within .quick-add-overlay {
+    opacity: 1;
+  }
+}
+@media (hover: none), (pointer: coarse) {
+  .quick-add-overlay {
+    opacity: 1;
+  }
 }
 
 /* ── Reduced motion ─────────────────────────────────────────────────────────── */

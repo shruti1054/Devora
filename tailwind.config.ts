@@ -75,6 +75,7 @@ const config: Config = {
         // De'VORA type scale
         "display-lg": ["4rem",   { lineHeight: "4.5rem", letterSpacing: "-0.02em" }],
         "headline-lg": ["2.5rem",{ lineHeight: "3rem" }],
+        "headline-lg-mobile": ["1.75rem", { lineHeight: "2.25rem" }],
         "headline-md": ["1.75rem",{ lineHeight: "2.25rem" }],
         "body-lg":     ["1.125rem",{ lineHeight: "1.75rem" }],
         "body-md":     ["1rem",   { lineHeight: "1.5rem" }],
@@ -83,6 +84,7 @@ const config: Config = {
 
       maxWidth: {
         container: "1280px",
+        "container-max": "1280px",
       },
 
       spacing: {

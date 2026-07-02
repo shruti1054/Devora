@@ -1,7 +1,7 @@
 const ITEMS = [
   "✦ Handmade by the shore",
   "✦ UPI payments accepted",
-  "✦ Free shipping over ₹2000",
+  "✦ Free delivery above ₹499",
   "✦ Pastel & Gold collections",
   "✦ Coastal jewellery, every day",
   "✦ Wear the shore",

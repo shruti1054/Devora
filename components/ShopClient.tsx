@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
 import Reveal from "./Reveal";
 import { getProducts } from "@/lib/store";
@@ -26,10 +27,26 @@ export default function ShopClient() {
   const [loading, setLoading]   = useState(true);
   const [cat, setCat]           = useState<Category | "all">("all");
   const [col, setCol]           = useState<Collection | "all">("all");
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const c = new URLSearchParams(window.location.search).get("c");
-    if (c === "pastel" || c === "gold") setCol(c);
+    const catParam = searchParams.get("category") as Category | null;
+    const colParam = searchParams.get("c");
+
+    if (catParam && CATS.some((c) => c.value === catParam)) {
+      setCat(catParam);
+    } else {
+      setCat("all");
+    }
+
+    if (colParam === "pastel" || colParam === "gold") {
+      setCol(colParam);
+    } else {
+      setCol("all");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     getProducts().then(setProducts).finally(() => setLoading(false));
   }, []);
 
@@ -39,79 +56,79 @@ export default function ShopClient() {
       (col === "all" || p.collection === col)
   );
 
+  const filterBtnClass = (active: boolean) =>
+    `shrink-0 font-sans text-label-sm px-3 py-2.5 min-h-[44px] tracking-widest uppercase transition-all rounded-full ${
+      active
+        ? "text-secondary bg-secondary-fixed/30 border border-secondary/30"
+        : "text-on-surface-variant hover:text-primary hover:bg-primary-container/30"
+    }`;
+
   return (
     <section className="w-full">
-      {/* 1. Shop Page Hero Section (matching golden_beach_collection template) */}
-      <div className="relative h-[530px] flex items-center justify-center overflow-hidden mb-20 px-margin-mobile">
+      {/* Shop Hero */}
+      <div className="relative min-h-[45vh] max-h-[420px] sm:min-h-[50vh] sm:max-h-[530px] flex items-center justify-center overflow-hidden mb-12 sm:mb-20 px-margin-mobile pt-20">
         <div className="absolute inset-0 z-0">
-          <div 
-            className="w-full h-full bg-cover bg-center transition-transform duration-1000 scale-105 hover:scale-100" 
+          <div
+            className="w-full h-full bg-cover bg-center transition-transform duration-1000 scale-105"
             style={{
-              backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmHsByRA1jsL6e1E5WZh9-sTEMVfOB8vohI3ELHiWVf5o5rNXh7VUMoj-zNpuiBP6peoQIzJEb6vOlQw-JSlbi_AyLrbi9cq1SIsjC1vqvRdEg8iAz1etFlJND8UF77-Rb8NB7DPNz2Lvh9SYFvvMo-CITfLKMoPpauPhS2-cqb5M5TTTbaI2vD1mKbHKWneYWTeVNeZltHds_YGhhEKvpCcfM0V2ls_pDineUuVQlZT8BaUe-70dPB45DjXEnCc8epAc4ugcZoz4')",
+              backgroundImage:
+                "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmHsByRA1jsL6e1E5WZh9-sTEMVfOB8vohI3ELHiWVf5o5rNXh7VUMoj-zNpuiBP6peoQIzJEb6vOlQw-JSlbi_AyLrbi9cq1SIsjC1vqvRdEg8iAz1etFlJND8UF77-Rb8NB7DPNz2Lvh9SYFvvMo-CITfLKMoPpauPhS2-cqb5M5TTTbaI2vD1mKbHKWneYWTeVNeZltHds_YGhhEKvpCcfM0V2ls_pDineUuVQlZT8BaUe-70dPB45DjXEnCc8epAc4ugcZoz4')",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-surface/90" />
         </div>
-        
-        <div className="relative z-10 text-center space-y-6 max-w-2xl">
-          <div className="inline-block px-4 py-1.5 lustre-badge rounded-full text-label-sm text-secondary uppercase tracking-[0.2em] mb-4">
+
+        <div className="relative z-10 text-center space-y-4 sm:space-y-6 max-w-2xl px-2">
+          <div className="inline-block px-4 py-1.5 lustre-badge rounded-full text-label-sm text-secondary uppercase tracking-[0.2em]">
             New Arrivals
           </div>
-          <h1 className="font-display-lg text-headline-lg md:text-display-lg text-on-surface leading-tight font-medium">
+          <h1 className="font-serif text-headline-lg-mobile sm:text-headline-lg md:text-display-lg text-on-surface leading-tight font-medium">
             {col === "gold" ? "Golden Beach" : col === "pastel" ? "Pastel Beach" : "The Collections"}
           </h1>
-          <p className="font-sans text-body-lg text-on-surface-variant max-w-lg mx-auto">
+          <p className="font-sans text-body-md sm:text-body-lg text-on-surface-variant max-w-lg mx-auto leading-relaxed">
             Hand-crafted artifacts inspired by the rhythm of the tides and the soft textures of the shoreline.
           </p>
         </div>
       </div>
 
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-12">
-        {/* 2. Collection Filters */}
-        <div className="flex justify-center gap-4 mb-8">
+        {/* Collection Filters — horizontal scroll on mobile */}
+        <div className="flex overflow-x-auto no-scrollbar justify-start sm:justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 pb-2 -mx-1 px-1">
           {COLS.map((c) => (
             <button
               key={c.value}
               onClick={() => setCol(c.value)}
-              className={`font-sans text-label-sm pb-1 tracking-widest uppercase transition-all ${
-                col === c.value
-                  ? "text-secondary border-b border-secondary"
-                  : "text-on-surface-variant hover:text-primary"
-              }`}
+              className={filterBtnClass(col === c.value)}
             >
               {c.label}
             </button>
           ))}
         </div>
 
-        {/* 3. Category Filters */}
-        <div className="flex flex-wrap justify-center items-center gap-6 pb-4 border-b border-outline-variant/30">
+        {/* Category Filters — horizontal scroll on mobile */}
+        <div className="flex overflow-x-auto no-scrollbar gap-2 sm:gap-4 sm:flex-wrap sm:justify-center pb-4 border-b border-outline-variant/30 -mx-1 px-1">
           {CATS.map((c) => (
             <button
               key={c.value}
               onClick={() => setCat(c.value)}
-              className={`font-sans text-label-sm pb-1 tracking-widest uppercase transition-all ${
-                cat === c.value
-                  ? "text-secondary border-b border-secondary"
-                  : "text-on-surface-variant hover:text-primary"
-              }`}
+              className={filterBtnClass(cat === c.value)}
             >
               {c.label}
             </button>
           ))}
         </div>
 
-        {/* 4. Product Listings Grid */}
+        {/* Product Grid */}
         {loading ? (
-          <p className="text-center text-on-surface-variant font-serif italic text-xl py-20">
+          <p className="text-center text-on-surface-variant font-serif italic text-lg sm:text-xl py-16 sm:py-20">
             Gathering treasures…
           </p>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-on-surface-variant font-serif italic text-xl py-20">
+          <p className="text-center text-on-surface-variant font-serif italic text-lg sm:text-xl py-16 sm:py-20">
             No pieces match — try another tide.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-gutter mt-16">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-8 sm:gap-x-4 md:gap-x-gutter md:gap-y-16 mt-10 sm:mt-16">
             {filtered.map((p, i) => (
               <Reveal key={p.id} delay={(i % 3) * 0.05}>
                 <ProductCard product={p} />

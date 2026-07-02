@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BRAND } from "@/lib/config";
+import { BRAND, CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/config";
 
 
 /**
@@ -13,7 +13,7 @@ import { BRAND } from "@/lib/config";
  */
 export default function Footer() {
   return (
-    <footer id="footer" className="bg-inverse-surface text-inverse-on-surface pt-16 pb-8 px-6">
+    <footer id="footer" className="bg-inverse-surface text-inverse-on-surface pt-12 sm:pt-16 pb-nav-mobile md:pb-8 px-margin-mobile">
       <div className="max-w-container mx-auto grid md:grid-cols-[2fr_1fr_1fr_1.5fr] gap-10">
         {/* Brand */}
         <div>
@@ -29,7 +29,7 @@ export default function Footer() {
                 key={s}
                 href="#"
                 aria-label={s}
-                className="w-9 h-9 rounded-pill border border-inverse-on-surface/25 grid place-items-center hover:bg-primary-container hover:text-on-surface hover:border-primary-container transition-all"
+                className="touch-target w-11 h-11 rounded-pill border border-inverse-on-surface/25 grid place-items-center hover:bg-primary-container hover:text-on-surface hover:border-primary-container transition-all active:scale-95"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <rect x="2" y="2" width="20" height="20" rx="5" />
@@ -59,7 +59,7 @@ export default function Footer() {
           </h4>
           <ul className="list-none p-0 m-0 space-y-2 text-sm mb-5">
             <li><Link href="/#about"  className="opacity-80 hover:opacity-100 hover:text-secondary-container transition">About</Link></li>
-            <li><Link href="/#footer" className="opacity-80 hover:opacity-100 hover:text-secondary-container transition">Contact</Link></li>
+            <li><a href={CONTACT_MAILTO} className="opacity-80 hover:opacity-100 hover:text-secondary-container transition">{CONTACT_EMAIL}</a></li>
           </ul>
           <div className="inline-flex items-center gap-2 bg-inverse-on-surface/10 rounded-pill px-4 py-2 text-xs tracking-wide">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

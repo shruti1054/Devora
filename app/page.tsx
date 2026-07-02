@@ -8,14 +8,9 @@ import Footer from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <main className="pb-24">
-      {/* 1. Hero Full Bleed Image */}
+    <main className="pb-nav-mobile md:pb-0 overflow-x-hidden">
       <Hero />
-      
-      {/* 2. Feature announcement marquee */}
       <FeatureStrip />
-      
-      {/* 3. Brand Identity (Inspired by the Golden Horizon) */}
       <About />
       
       {/* 4. The Golden Hour Collection banner */}

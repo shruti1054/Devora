@@ -36,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${dmSans.variable}`}>
-      <body className="font-sans bg-background text-on-surface select-none">
+      <body className="font-sans bg-background text-on-surface">
         <Providers>
           <Nav />
           {children}
